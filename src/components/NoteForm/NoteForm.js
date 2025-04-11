@@ -1,12 +1,15 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./NoteForm.css";
 import { actions } from "../../redux/reducers/noteReducer";
+import { notificationSelector, resetNotification } from "../../redux/reducers/notificationReducer";
 // import { addNote } from "../../redux/actions/noteAction";
 
 function NoteForm() {
   const dispatch = useDispatch()
   const [noteText, setNoteText] = useState("");
+  const message = useSelector(notificationSelector)
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,9 +17,19 @@ function NoteForm() {
     setNoteText("");
   };
 
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        dispatch(resetNotification())
+
+      }, 3000)
+    }
+  }, [dispatch, message])
   return (
     <div className="container">
-
+      {message && <div className="alert alert-warning" role="alert">
+        {message}
+      </div>}
       <form onSubmit={handleSubmit}>
         <textarea
           type="text"
