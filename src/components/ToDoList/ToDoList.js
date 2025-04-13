@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 // import { toggleTodo } from "../../redux/actions/todoActions";
+import axios from "axios";
 
 import "./ToDoList.css";
 import { actions, todoSelector } from "../../redux/reducers/todoReducer";
@@ -12,10 +13,14 @@ function ToDoList() {
   const disptach = useDispatch();
 
   useEffect(() => {
-    fetch("http://localhost:4100/api/todos").then(res => res.json()).then(parsedJson => console.log(parsedJson)
-    ).catch(err => console.log(err)
-    )
-  }, [])
+    // fetch("http://localhost:4100/api/todos").then(res => res.json()).then(parsedJson => console.log(parsedJson)
+    // ).catch(err => console.log(err)
+    // )
+    axios.get("http://localhost:4100/api/todos").then(res => {
+      disptach(actions.setInitialState(res.data))
+
+    })
+  }, [disptach])
   // const todos= store.getState().todos;
 
   return (
