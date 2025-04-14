@@ -12,18 +12,33 @@ const initialState = {
 }
 
 //thunk function
-export const getInitialStateAsync
-    // createAsyncThunk("todo/getInitialState", (arg, thunkAPI) => {
-    //     axios.get("http://localhost:4100/api/todos").then(res => {
-    //         // disptach(actions.setInitialState(res.data))
-    //         thunkAPI.dispatch(actions.setInitialState(res.data))
+export const getInitialStateAsync = createAsyncThunk("todo/getInitialState", () => {
+    return axios.get("http://localhost:4100/api/todos")
+})
+// createAsyncThunk("todo/getInitialState", (arg, thunkAPI) => {
+//     axios.get("http://localhost:4100/api/todos").then(res => {
+//         // disptach(actions.setInitialState(res.data))
+//         thunkAPI.dispatch(actions.setInitialState(res.data))
 
-    //     })
-    // })
-    = createAsyncThunk("todo/getInitialState", () => {
-        return axios.get("http://localhost:4100/api/todos")
-    })
+//     })
+// })
 
+
+export const addTodoAsync = createAsyncThunk("todo/addTodo", async (payload) => {
+    const res = await fetch("http://localhost:4100/api/todos", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            text: payload,
+            completed: false
+        })
+    });
+    const result = res.json();
+    return result
+
+})
 //creating reducer using redux toolkit
 
 const todoSlice = createSlice({
@@ -51,7 +66,9 @@ const todoSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getInitialStateAsync.fulfilled, (state, action) => {
-            state.todos = [...action.payload]
+            state.todos = [...action.payload.data]
+        }).addCase(addTodoAsync.fulfilled, (state, action) => {
+            state.todos.push(action.payload);
         })
     }
 })

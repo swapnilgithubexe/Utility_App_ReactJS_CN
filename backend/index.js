@@ -6,6 +6,7 @@ const server = express();
 server.listen(4100);
 
 server.use(cors())
+server.use(express.json())
 
 server.use("/api/todos/", todoRoutes.router);
 

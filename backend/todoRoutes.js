@@ -3,6 +3,7 @@ const controller = require("./todoController");
 
 const router = express.Router();
 
-router.get("/",controller.get);
+router.get("/", controller.get);
+router.post("/", controller.create);
 
-module.exports.router=router;
+module.exports.router = router;
