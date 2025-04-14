@@ -1,6 +1,8 @@
 
 // import { ADD_TODO, TOGGLE_TODO } from "../actions/todoActions";
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import axios from "axios";
+
 
 const initialState = {
     todos: [
@@ -8,6 +10,19 @@ const initialState = {
         // { text: "Study at 8", completed: true }
     ]
 }
+
+//thunk function
+export const getInitialStateAsync
+    // createAsyncThunk("todo/getInitialState", (arg, thunkAPI) => {
+    //     axios.get("http://localhost:4100/api/todos").then(res => {
+    //         // disptach(actions.setInitialState(res.data))
+    //         thunkAPI.dispatch(actions.setInitialState(res.data))
+
+    //     })
+    // })
+    = createAsyncThunk("todo/getInitialState", () => {
+        return axios.get("http://localhost:4100/api/todos")
+    })
 
 //creating reducer using redux toolkit
 
@@ -33,6 +48,11 @@ const todoSlice = createSlice({
                 return todo;
             })
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getInitialStateAsync.fulfilled, (state, action) => {
+            state.todos = [...action.payload]
+        })
     }
 })
 

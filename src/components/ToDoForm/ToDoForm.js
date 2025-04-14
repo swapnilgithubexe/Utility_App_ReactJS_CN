@@ -8,6 +8,8 @@ import { notificationSelector, resetNotification } from "../../redux/reducers/no
 
 function ToDoForm() {
   const message = useSelector(notificationSelector);
+  console.log(message);
+
 
   const [todoText, setTodoText] = useState("");
   const disptach = useDispatch();
